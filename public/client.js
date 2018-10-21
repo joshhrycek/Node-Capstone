@@ -7,19 +7,20 @@ const MOCK_CHARACTER = {
     "class": "Monk",
     "race": "Wood Elf",
     "alignment": "Chaotic Neutral",
-    "experiencePoints": 1000,
+    "background": "Scholor",
+    "ExpPoints": 1000,
     "level": 1,
     "attr": {
-        "str": 20,
-        "dex": 20,
-        "con": 20,
-        "int": 20,
-        "wis": 20,
-        "cha": 20
+        "str": 1,
+        "dex": 3,
+        "con": 5,
+        "int": 7,
+        "wis": 10,
+        "cha": 12
       },
-    "background": "Scholor",
     "insp": 1,
     "profBonus": 2,
+    "passiveWis": 10,
     "AC": 16,
     "init": 0,
     "speed": 25,
@@ -54,15 +55,7 @@ const MOCK_CHARACTER = {
       "stlh": true,
       "surv": true
     },
-    "passiveWis": 10,
-    "profAndLang": [
-      "Unarmed",
-      "Goblin",
-      "Simple Weapons",
-      "Common",
-      "Elven"
-    ],
-    "attacks": [
+    "atks": [
       [
         "Greatsword",
         5,
@@ -94,7 +87,7 @@ const MOCK_CHARACTER = {
       "successes": 0,
       "failures": 0
     },
-    "equipment": [
+    "equip": [
       "Greatsword",
       "Club",
       "Bag Of Holding",
@@ -103,35 +96,78 @@ const MOCK_CHARACTER = {
       "Staff of Wanting",
       "Map"
     ],
+    "langsAndProfs": [
+        "Unarmed",
+        "Goblin",
+        "Simple Weapons",
+        "Common",
+        "Elven"
+    ],
     "money":{
         "cp": 0,
         "sp": 0,
         "ep": 0,
         "gp": 0,
         "pp": 0
-      },
+    },
     "story": {
         "traits": 'trait1',
         "ideals": 'idea1',
         "bonds": 'bond1',
         "flaws": 'flaw1',
     },
-    "features": [
+    "feats": [
       "Brave",
       "Self-Consious",
       "Reckless",
     ],
 };
 
-const data = MOCK_CHARACTER
+const character = MOCK_CHARACTER
 
-console.log(MOCK_CHARACTER)
-function getCharacterSheet(callbackFn) {
-    setTimeout(function() {
-        callbackFn(MOCK_CHARACTER)}, 100);
+function calculateAttrMod (stat) {
+    if (stat === 1) {
+        return -5
+    }if (stat === 2) {
+        return -4
+    }if (stat === 3) {
+        return -3
+    }if (stat === 5) {
+        return -2
+    }if (stat === 23 || 22 ) {
+        $(`#${name}-mod`).attr('value', 6)
+    }if (stat === 21 || 20 ) {
+        $(`#${name}-mod`).attr('value', 5)
+    }if (stat === 19 || 18 ) {
+        $(`#${name}-mod`).attr('value', 4)
+    }if (stat === 17 || 16 ) {
+        $(`#${name}-mod`).attr('value', 3)
+    }if (stat === 15 || 14 ) {
+        $(`#${name}-mod`).attr('value', 2)
+    }if (stat === 13 || 12 ) {
+        $(`#${name}-mod`).attr('value', 1)
+    }if (stat === 11 || 10 ) {
+        $(`#${name}-mod`).attr('value', 0)
+    }if (stat === 9 || 8 ) {
+        $(`#${name}-mod`).attr('value', -1)
+    }if (stat === 7 || 6 ) {
+        $(`#${name}-mod`).attr('value', -2)
+    }if (stat === 5 || 4 ) {
+        $(`#${name}-mod`).attr('value', -3)
+    }if (stat === 3 || 2 ) {
+        $(`#${name}-mod`).attr('value', -4)
+    }if (stat === 1) {
+        $(`#${name}-mod`).attr('value', -5)
+    }
 }
 
-function displayCharacterSheet(data) {
+console.log(character)
+function getCharacterSheet(callbackFn) {
+    setTimeout(function() {
+        callbackFn(character)}, 100);
+}
+
+function displayCharacterSheet(character) {
 
 }
 
@@ -175,86 +211,94 @@ function renderCharacterSheetPage() {
 
 
 function renderPlayerName() {
-    let name = data.player
+    let name = character.player
     $('#player').attr('value', name)
 }
 
 function renderCharName() {
-    let name = data.name
+    let name = character.name
     $('#char-name').attr('value', name);
 }
 
 function renderClass() {
-    let characterClass = data.class
+    let characterClass = character.class
     $('#class').attr('value', characterClass)
 }
 
 function renderRace() {
-    let race = data.race
+    let race = character.race
     $('#race').attr('value', race)
 }
 
 function renderAlignment() {
-    let alignment = data.alignment
+    let alignment = character.alignment
     $('#alignment').attr('value', alignment)
 }
 
 function renderExp() {
-    let exp = data.experiencePoints
+    let exp = character.ExpPoints
     $('#exp').attr('value', exp)
 }
 
 function renderLvl() {
-    let lvl = data.level
+    let lvl = character.level
     $('#level').attr('value', lvl)
 }
 
-function renderattr() {
-    
+function renderAttr() {
+    for (let i in character.attr) {
+        $(`#${i}`).val(character.attr[i]);
+        renderAttrMod(i, character.attr[i]);
+    }
+}
+
+function renderAttrMod (name, stat) {
+    let mod = calculateAttrMod(stat)
+    $(`#${name}-mod`).attr('value', mod)
 }
 
 function renderBackground() {
-    let background = data.background
+    let background = character.background
     $('#background').attr('value', background)
 }
 
 function renderInsp() {
-    let insp = data.insp
+    let insp = character.insp
     $('#insp').attr('value', insp)
 }
 
 function renderProfBonus() {
-    let prof = data.profBonus
+    let prof = character.profBonus
     $('#prof-bonus').attr('value', prof)
 }
 
 function renderAC() {
-    let ac = data.AC
+    let ac = character.AC
     $('#armor').attr('value', ac)
 }
 
 function renderInitative() {
-    let init = data.init
+    let init = character.init
     $('#init').attr('value', init)
 }
 
 function renderSpeed() {
-    let speed = data.speed
+    let speed = character.speed
     $('#speed').attr('value', speed)
 }
 
 function renderMaxHP() {
-    let hp = data.hp
+    let hp = character.hp
     $('#maxHP').attr('value', hp)
 }
 
 function renderCurrentHP() {
-    let hp = data.currentHp
+    let hp = character.currentHp
     $('#currentHP').attr('value', hp)
 }
 
 function renderTempHP() {
-    let hp = data.tempHp
+    let hp = character.tempHp
     $('#tempHP').attr('value', hp)
 }
 
@@ -262,17 +306,53 @@ function renderSaveThrows() {
     
 }
 
-function renderSkils() {
-    
+function renderSkills() {
+    let arrayOfArrays = Object.entries(character.skills)
+    arrayOfArrays.forEach(i => {
+        let name = i[0]
+        let isChecked = i[1]
+        checkProfSkills(name, isChecked);
+    });
+    getSkillPoints();
+    addSkillBonus();
+}
+
+function getSkillPoints(name, isChecked) {
+    let str = document.getElementById('str-mod').value
+    let dex = document.getElementById('dex-mod').value
+    let con = document.getElementById('con-mod').value
+    let int = document.getElementById('int-mod').value
+    let wis = document.getElementById('wis-mod').value
+    let cha = document.getElementById('cha-mod').value
+
+    $('#acro-point,#anim-point').attr('value', dex)
+
+}
+
+function addSkillBonus(stat) {
+    let bonus = character.profBonus
+}
+
+function checkProfSkills (name, isChecked) {
+    if (isChecked === true) {
+        $(`#${name}-pro`).attr('checked','')
+    }
 }
 
 function renderPassWis() {
-    let wis = data.passiveWis
+    let wis = character.passiveWis
     $('#pass-wis').attr('value', wis)
 }
 
 function renderProfandLang() {
-    
+    character.langsAndProfs.forEach(i => {
+         $('#lang-list').append(generateProfandLang(i));
+    });
+}
+
+function generateProfandLang(name) {
+    return `
+    <input class="lang" value="${name}"></input>`
 }
 
 function renderHitD() {
@@ -284,7 +364,20 @@ function renderDeathSave() {
 }
 
 function renderAtks() {
-    
+    character.atks.forEach(atk => {
+        const newAtk = generateAtk(atk[0], atk[1], atk[2]);
+        $('#new-atk').append(newAtk);
+    })
+}
+
+function generateAtk(name, bonus, dmg) {
+    return `
+    <legend>Name</legend>
+    <input class="atk-name" type="text" value="${ name }">
+    <legend>Attack Bonus</legend>
+    <input class="atk-bonus" type="number" value="${ bonus }">
+    <legend>Damage/Bonus</legend>
+    <input class="atk-damage" type="text" value="${ dmg }">`
 }
 
 function renderSpellcasting() {
@@ -292,23 +385,37 @@ function renderSpellcasting() {
 }
 
 function renderMoney() {
-    for (let i in data.money) {
-        $(`#${i}`).val(data.money[i]);
+    for (let i in character.money) {
+        $(`#${i}`).val(character.money[i]);
     }
 }
 
 function renderEquipment() {
-    
+    character.equip.forEach(i => {
+        $('#other-equip').append(generateEquip(i));
+    });
+}
+
+function generateEquip(name) {
+    return `
+    <input class="equip-class" value="${name}"></input>`
 }
 
 function renderStory() {
-    for (let i in data.story) {
-        $(`#${i}`).val(data.story[i]);
+    for (let i in character.story) {
+        $(`#${i}`).val(character.story[i]);
     }
 }
 
 function renderFeats() {
-    
+    character.feats.forEach(i => {
+        $('#feats-list').append(generateFeats(i));
+    });
+}
+
+function generateFeats(name) {
+    return `
+    <input type="text" class="feats" value="${name}"></input>`
 }
 
 function renderSpellLvl1() {
@@ -399,7 +506,7 @@ function renderValues() {
     renderAlignment();
     renderExp();
     renderLvl();
-    renderattr();
+    renderAttr();
     renderBackground();
     renderInsp();
     renderProfBonus();
@@ -410,7 +517,7 @@ function renderValues() {
     renderCurrentHP();
     renderTempHP();
     renderSaveThrows();
-    renderSkils();
+    renderSkills();
     renderPassWis();
     renderProfandLang();
     renderHitD();

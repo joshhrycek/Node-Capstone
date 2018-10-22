@@ -14,9 +14,9 @@ const MOCK_CHARACTER = {
         "str": 1,
         "dex": 3,
         "con": 5,
-        "int": 7,
-        "wis": 10,
-        "cha": 12
+        "int": 3,
+        "wis": 3,
+        "cha": 3
       },
     "insp": 1,
     "profBonus": 2,
@@ -28,12 +28,12 @@ const MOCK_CHARACTER = {
     "currentHp": 20,
     "tempHp": 5,
     "saveThrows": {
-      "str": 0,
-      "dex": 0,
-      "con": 0,
-      "int": 0,
-      "wis": 0,
-      "cha": 0
+      "str": false,
+      "dex": true,
+      "con": false,
+      "int": true,
+      "wis": false,
+      "cha": true
     },
     "skills": {
       "acro": false,
@@ -209,7 +209,6 @@ function renderCharacterSheetPage() {
 
 //Functions that are responsible for adding saved vaules to Character Sheets
 
-
 function renderPlayerName() {
     let name = character.player
     $('#player').attr('value', name)
@@ -257,6 +256,22 @@ function renderAttrMod (name, stat) {
     $(`#${name}-mod`).attr('value', mod)
 }
 
+function getAttrMod(name) {
+
+    let varName = parseInt(name)
+
+    let str = document.getElementById('str-mod').value
+    let dex = document.getElementById('dex-mod').value
+    let con = document.getElementById('con-mod').value
+    let int = document.getElementById('int-mod').value
+    let wis = document.getElementById('wis-mod').value
+    let cha = document.getElementById('cha-mod').value
+
+    let attr = varName
+    
+    return attr
+}
+
 function renderBackground() {
     let background = character.background
     $('#background').attr('value', background)
@@ -270,6 +285,12 @@ function renderInsp() {
 function renderProfBonus() {
     let prof = character.profBonus
     $('#prof-bonus').attr('value', prof)
+}
+
+function addProfBonus (stat) {
+    let number = parseInt(stat)
+    let bonus = character.profBonus
+    return number + bonus
 }
 
 function renderAC() {
@@ -303,21 +324,23 @@ function renderTempHP() {
 }
 
 function renderSaveThrows() {
-    
+    checkProfSaves();
+    getSavePoints();
+    addSaveBonus();
 }
 
-function renderSkills() {
-    let arrayOfArrays = Object.entries(character.skills)
+function checkProfSaves() {
+    let arrayOfArrays = Object.entries(character.saveThrows)
     arrayOfArrays.forEach(i => {
         let name = i[0]
         let isChecked = i[1]
-        checkProfSkills(name, isChecked);
+        if (isChecked === true) {
+            $(`#${name}-save`).attr('checked','')
+        }
     });
-    getSkillPoints();
-    addSkillBonus();
 }
 
-function getSkillPoints(name, isChecked) {
+function getSavePoints() {
     let str = document.getElementById('str-mod').value
     let dex = document.getElementById('dex-mod').value
     let con = document.getElementById('con-mod').value
@@ -325,18 +348,70 @@ function getSkillPoints(name, isChecked) {
     let wis = document.getElementById('wis-mod').value
     let cha = document.getElementById('cha-mod').value
 
-    $('#acro-point,#anim-point').attr('value', dex)
-
+    $(`#str-save-point`).attr('value', str)
+    $(`#dex-save-point`).attr('value', dex)
+    $(`#con-save-point`).attr('value', con)
+    $(`#int-save-point`).attr('value', int)
+    $(`#wis-save-point`).attr('value', wis)
+    $(`#cha-save-point`).attr('value', cha)
 }
 
-function addSkillBonus(stat) {
-    let bonus = character.profBonus
-}
-
-function checkProfSkills (name, isChecked) {
-    if (isChecked === true) {
-        $(`#${name}-pro`).attr('checked','')
+function addSaveBonus() {
+    for (let save in character.saveThrows) {
+        if ($(`#${save}-save`).is(':checked')) {
+            let point = parseInt( document.getElementById(`${save}-save`).value);
+            $(`#${save}-point`).attr('value', addProfBonus(point));
+        }
     }
+}
+
+function renderSkills() {
+    checkProfSkills();
+    getSkillPoints();
+    addSkillBonus();
+}
+
+function getSkillPoints() {
+    let str = document.getElementById('str-mod').value
+    let dex = document.getElementById('dex-mod').value
+    let con = document.getElementById('con-mod').value
+    let int = document.getElementById('int-mod').value
+    let wis = document.getElementById('wis-mod').value
+    let cha = document.getElementById('cha-mod').value
+
+    let strSkills = ['#athl-point'] 
+    let dexSkills = ['#acro-point','#soh-point','#stlh-point']
+    let intSkills = ['#arca-point','#hist-point','#inve-point','#natu-point','#reli-point']
+    let wisSkills = ['#anim-point','#insi-point','#medi-point','#perc-point','#surv-point']
+    let chaSkills = ['#dece-point', '#inti-point','#perf-point','#pers-point']
+
+    $(`${strSkills}`).attr('value', str)
+    $(`${dexSkills}`).attr('value', dex)
+    $(`${intSkills}`).attr('value', int)
+    $(`${wisSkills}`).attr('value', wis)
+    $(`${chaSkills}`).attr('value', cha)
+
+}
+
+function addSkillBonus() {
+    for (let skill in character.skills) {
+        if ($(`#${skill}-pro`).is(':checked')) {
+            let skillPoint = parseInt( document.getElementById(`${skill}-point`).value);
+            $(`#${skill}-point`).attr('value', addProfBonus(skillPoint));
+        }
+    }
+}
+
+
+function checkProfSkills () {
+    let arrayOfArrays = Object.entries(character.skills)
+    arrayOfArrays.forEach(i => {
+        let name = i[0]
+        let isChecked = i[1]
+        if (isChecked === true) {
+            $(`#${name}-pro`).attr('checked','')
+        }
+    });
 }
 
 function renderPassWis() {

@@ -168,17 +168,17 @@ function getCharacterSheet(callbackFn) {
 }
 
 function displayCharacterSheet(character) {
-
+    renderValues();
 }
 
 
 function getAndDisplayCharacterSheet() {
-    getCharacterSheet(displayStatusUpdates);
+    getCharacterSheet(displayCharacterSheet);
 }
 
 function watchTestButton() {
     $('#test-button').on('click', event => {
-        renderValues();
+        getAndDisplayCharacterSheet();
     });
 }
 

@@ -6,9 +6,423 @@
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="client.js"></script>
 </head>
 <body>
-    <p>sup bitch</p>
+    <main>
+
+        <button id="test-button">test</button>
+
+
+        <form id= "character-info">
+
+            
+                <fieldset>
+                <legend for="char-name">Character Name</legend>
+                <input type="text" id="char-name" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for="class">Class</legend>
+                <input type="text" id= "class" required>
+                </fieldset>
+            
+            
+                <fieldset>
+                <legend for="level">Level</legend>
+                <input type="number" id= "level" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for="race">Race</legend>
+                <input type="text" id="race" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for= "background">Background</legend>
+                <input type="text" id= "background" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for="alignment">Alignment</legend>
+                <input type="text" id="alignment" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for="player">Player Name</legend>
+                <input type="text" id="player" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for="exp">Experience Points</legend>
+                <input type="number" id="exp" required>
+                </fieldset>
+
+        </form>
+
+
+        <form id= "attributes">
+            
+            
+                <fieldset>
+                    <legend for= "str">Strength</legend>
+                    <input type= "number" id="str" required>
+                    <input type= "number" id="str-mod" required>
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend for= "dex">Dexterity</legend>
+                    <input type= "number" id="dex" required>
+                    <input type= "number" id="dex-mod" required>
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend for= "con">Constitution</legend>
+                    <input type= "number" id="con" required>
+                    <input type= "number" id="con-mod" required>
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend for= "int">Intelligence</legend>
+                    <input type= "number" id="int" required>
+                    <input type= "number" id="int-mod" required>
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend for= "wis">Wisdom</legend>
+                    <input type= "number" id="wis" required>
+                    <input type= "number" id="wis-mod" required>
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend for= "cha">Charisma</legend>
+                    <input type= "number" id="cha" required>
+                    <input type= "number" id="cha-mod" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for="insp">Inspiration</legend>
+                <input type="number" id="insp" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for="prof-bonus">Proficiency Bonus</legend>
+                <input type="number" id="prof-bonus" required>
+                </fieldset>
+
+            
+                <fieldset>
+                <legend for="pass-wis">Passive Wisdom</legend>
+                <input type="number" id="pass-wis" required>
+                </fieldset>
+        </form>
+
+
+        <form id= "skills">
+
+            
+                <fieldset id="acro">
+                    <legend>Acrobatics</legend>
+                    <input class="skill-pro" id="acro" type="checkbox">
+                    <input type="number" class="skill-point" id="acro-point">
+                </fieldset>
+
+            
+                <fieldset id="anim">
+                    <legend>Animal Handling</legend>
+                    <input class="skill-pro" id="anim-pro" type="checkbox">
+                    <input type="number" class="skill-pro" id="anim-point">
+                </fieldset>
+
+            
+                <fieldset id="arca">
+                    <legend>Arcana</legend>
+                    <input class="skill-pro" id="arca-pro" type="checkbox">
+                    <input type="number" class="skill-pro" id="arca-point">
+                </fieldset>
+
+            
+                <fieldset id="athl">
+                    <legend>Athletics</legend>
+                    <input class="skill-pro" id="athl-pro" type="checkbox">
+                    <input type="number" class="skill-pro" id="athl-point">
+                </fieldset>
+
+            
+                <fieldset id="dece">
+                    <legend>Deception</legend>
+                    <input class="skill-pro" id="dece-pro" type="checkbox">
+                    <input type="number" id="dece-point">
+                </fieldset>
+
+            
+                <fieldset id="hist">
+                    <legend>History</legend>
+                    <input class="skill-pro" id="hist-pro" type="checkbox">
+                    <input type="number" id="hist-point">
+                </fieldset>
+
+            
+                <fieldset id="insi">
+                    <legend>Insight</legend>
+                    <input class="skill-pro" id="insi-pro" type="checkbox">
+                    <input type="number" id="insi-point">
+                </fieldset>
+
+            
+                <fieldset id="inti">
+                    <legend>Intimidation</legend>
+                    <input class="skill-pro" id="inti-pro" type="checkbox">
+                    <input type="number" id="inti-point">
+                </fieldset>
+
+            
+                <fieldset id="inve">
+                    <legend>Investigation</legend>
+                    <input class="skill-pro" id="inve-pro" type="checkbox">
+                    <input type="number" id="inve-point">
+                </fieldset>
+
+                <fieldset id="medi">
+                    <legend>Medicine</legend>
+                    <input class="skill-pro" id="medi-pro" type="checkbox">
+                    <input type="number" id="medi-point">
+                </fieldset>
+
+            
+                <fieldset id="natu">
+                    <legend>Nature</legend>
+                    <input class="skill-pro" id="natu-pro" type="checkbox">
+                    <input type="number" id="natu-point">
+                </fieldset>
+
+                <fieldset id="perc">
+                    <legend>Perception</legend>
+                    <input class="skill-pro" id="perc-pro" type="checkbox">
+                    <input type="number" id="perc-point">
+                </fieldset>
+
+                <fieldset id="perf">
+                    <legend>Performance</legend>
+                    <input class="skill-pro" id="perf-pro" type="checkbox">
+                    <input type="number" id="perf-point">
+                </fieldset>
+
+                <fieldset id="pers">
+                    <legend>Persuasion</legend>
+                    <input class="skill-pro" id="pres-pro" type="checkbox">
+                    <input type="number" id="pers-point">
+                </fieldset>
+
+                <fieldset id="reli">
+                    <legend>Religion</legend>
+                    <input class="skill-pro" id="reli-pro" type="checkbox">
+                    <input type="number" id="reli-point">
+                </fieldset>
+
+                <fieldset id="soh">
+                    <legend>Sleight of Hand</legend>
+                    <input class="skill-pro" id="soh-pro" type="checkbox">
+                    <input type="number" id="soh-point">
+                </fieldset>
+
+            
+                <fieldset id="stlh">
+                    <legend>Stealth</legend>
+                    <input class="skill-pro" id="stlh-pro" type="checkbox">
+                    <input type="number" id="stlh-point">
+                </fieldset>
+
+            
+                <fieldset id="surv">
+                    <legend>Survival</legend>
+                    <input class="skill-pro" id="surv-pro" type="checkbox">
+                    <input type="number" id="surv-point">
+                </fieldset>
+
+        </form>
+
+        <form id= "saves">
+
+            
+                <fieldset>
+                    <legend>Strength</legend>
+                    <input type="checkbox" class="save-prof" id="str-save">
+                    <input id="str-save-point" type="number">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Dexterity</legend>
+                    <input type="checkbox" class="save-prof" id="dex-save">
+                    <input id="dex-save-point" type="number">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Constitution</legend>
+                    <input type="checkbox" class="save-prof" id="con-save">
+                    <input id="con-save-point" type="number">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Intelligence</legend>
+                    <input type="checkbox" class="save-prof" id="int-save">
+                    <input id="int-save-point" type="number">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Wisdom</legend>
+                    <input type="checkbox" class="save-prof" id="wis-save">
+                    <input id="wis-save-point" type="number">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Charisma</legend>
+                    <input type="checkbox" class="save-prof" id="cha-save">
+                    <input id="cha-save-point" type="number">
+                </fieldset>
+
+        </form>
+
+        <form id= "combat-stats">
+
+            
+                <fieldset>
+                    <legend>Armor Class</legend>
+                    <input  id="armor" type="number">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Initiative</legend>
+                    <input  id="init" type="number">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Speed</legend>
+                    <input id="speed" type="number">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Hit Point Maximum</legend>
+                    <input id="maxHP" type="number">
+                    <legend>Current Hit Points</legend>
+                    <input id= "currentHP" type="number">
+                    <legend>Temporary Hit Points</legend>
+                    <input id="tempHP" type="number">
+                </fieldset>
+
+        </form>
+
+        <form id="atks-spells">
+            
+            <fieldset id= "new-atk">
+
+            <legend>Name</legend>
+            <input id="new-atk-name" class="atk-name" type="text">
+            
+            <legend>Attack Bonus</legend>
+            <input id="new-atk-bonus" class="atk-bonus" type="number">
+            
+            <legend>Damage/Type</legend>
+            <input id="new-atk-dmg" class="atk-dmg" type="text">
+
+            </fieldset>
+
+            <button id="new-atk-button" type="submit">Add Attack</button>
+        </form>
+
+        <form id="background">
+
+            
+                <fieldset>
+                    <legend>Personality Traits</legend>
+                    <input id="traits" type="text">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Ideals</legend>
+                    <input id="ideals" type="text">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Bonds</legend>
+                    <input id="bonds" type="text">
+                </fieldset>
+
+            
+                <fieldset>
+                    <legend>Flaws</legend>
+                    <input id="flaws" type="text">
+                </fieldset>
+
+        </form>
+
+        <form id="equipment">
+
+            
+                <fieldset id="money">
+                    <legend>CP</legend>
+                    <input id="cp" type="number">
+                    <legend>SP</legend>
+                    <input id="sp" type="number">
+                    <legend>EP</legend>
+                    <input id="ep" type="number">
+                    <legend>GP</legend>
+                    <input id="gp" type="number">
+                    <legend>PP</legend>
+                    <input id="pp" type="number">
+                </fieldset>
+
+            
+                <fieldset id="other-equip">
+                    <legend>Equipment</legend>
+                    <input id="equip" class="equip-class" type="text">
+                    <button id="equip-button">Add Equipment</button>
+                </fieldset>
+
+        </form>
+
+        <form id="features">
+            
+                <fieldset id="feats-list">
+                <legend>Features and Traits</legend>
+                <input type="text" id="new-feat" class="feats">
+                <button id="add-feat-button" type="submit">Add Feature</button>
+                </fieldset>
+        </form>
+
+        <form id="lang-other">
+            
+                <fieldset id="lang-list">
+                    <legend>Languages and Other Proficiencies</legend>
+                    <input type="text" id="new-lang" class="lang">
+                    <button id="add-lang-button" type="submit">Add Proficiency</button>
+                </fieldset>
+        </form>
+    
+    </main>
 </body>
 </html>

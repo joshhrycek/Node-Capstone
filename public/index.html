@@ -12,8 +12,8 @@
 <body>
     <main>
 
-        <button id="test-button">test</button>
-
+        <button id="test-button">test render</button>
+        <button id="test-retrive">test retrive</button>
 
         <form id= "character-info">
 
@@ -336,16 +336,16 @@
 
         <form id="atks-spells">
             
-            <fieldset id= "new-atk">
+            <fieldset class= "new-atk">
 
             <legend>Name</legend>
-            <input id="new-atk-name" class="atk-name" type="text">
+            <input id="new-atk-name" type="text">
             
             <legend>Attack Bonus</legend>
-            <input id="new-atk-bonus" class="atk-bonus" type="number">
+            <input id="new-atk-bonus" type="number">
             
             <legend>Damage/Type</legend>
-            <input id="new-atk-dmg" class="atk-dmg" type="text">
+            <input id="new-atk-dmg" type="text">
 
             </fieldset>
 
@@ -355,25 +355,25 @@
         <form id="background">
 
             
-                <fieldset>
+                <fieldset id="traits-form">
                     <legend>Personality Traits</legend>
                     <input id="traits" type="text">
                 </fieldset>
 
             
-                <fieldset>
+                <fieldset id="ideals-form">
                     <legend>Ideals</legend>
                     <input id="ideals" type="text">
                 </fieldset>
 
             
-                <fieldset>
+                <fieldset id="bonds-form">
                     <legend>Bonds</legend>
                     <input id="bonds" type="text">
                 </fieldset>
 
             
-                <fieldset>
+                <fieldset id="flaws-form">
                     <legend>Flaws</legend>
                     <input id="flaws" type="text">
                 </fieldset>

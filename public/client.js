@@ -742,19 +742,28 @@ function checkIfChecked(name, id) {
 }
 
 function getAtks() {
+
     let atksName = [];
 
     let atksBonus = [];
 
     let atksDmg = [];
 
+    let atks = [];
+    
     const names =  $('#atks-spells fieldset .atk-name');
     const bonus = $('#atks-spells fieldset .atk-bonus');
     const dmg = $('#atks-spells fieldset .atk-damage');
     
-    console.log(names)
-    console.log(bonus)
-    console.log(dmg)
+    atksName.push(names)
+    atksBonus.push(bonus)
+    atksDmg.push(dmg)
+
+    atksName.forEach(atk => {
+        
+    });
+
+
 
 }
 

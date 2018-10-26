@@ -742,15 +742,19 @@ function checkIfChecked(name, id) {
 }
 
 function getAtks() {
-    // let atks = [];
+    let atksName = [];
 
-    // const object =  $('#atks-spells fieldset .atk-name,.atk-bonus,.atk-damage');
+    let atksBonus = [];
 
+    let atksDmg = [];
 
-    // console.log(Object.values(object))
-    // console.log(object.filter(i => {
-    //     return !item
-    // }))
+    const names =  $('#atks-spells fieldset .atk-name');
+    const bonus = $('#atks-spells fieldset .atk-bonus');
+    const dmg = $('#atks-spells fieldset .atk-damage');
+    
+    console.log(names)
+    console.log(bonus)
+    console.log(dmg)
 
 }
 

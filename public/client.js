@@ -58,7 +58,7 @@ const MOCK_CHARACTER = {
     "atks": [
       [
         "Greatsword",
-        5,
+        10,
         "1d12 + 3 slashing"
       ],
       [
@@ -742,29 +742,19 @@ function checkIfChecked(name, id) {
 }
 
 function getAtks() {
-
-    let atksName = [];
-
-    let atksBonus = [];
-
-    let atksDmg = [];
-
     let atks = [];
-    
-    const names =  $('#atks-spells fieldset .atk-name');
-    const bonus = $('#atks-spells fieldset .atk-bonus');
-    const dmg = $('#atks-spells fieldset .atk-damage');
-    
-    atksName.push(names)
-    atksBonus.push(bonus)
-    atksDmg.push(dmg)
 
-    atksName.forEach(atk => {
-        
-    });
+    const names =  $('#atks-spells fieldset .atk-name').toArray().map(el => el.value);
 
+    const bonus = $('#atks-spells fieldset .atk-bonus').toArray().map(el => el.value);
 
+    const dmg = $('#atks-spells fieldset .atk-damage').toArray().map(el => el.value);
 
+    for (let i= 0;i < names.length; i++) {
+        atks.push([names[i],bonus[i],dmg[i]])
+    }
+
+    return atks
 }
 
 function getSpellcasting() {
@@ -810,15 +800,10 @@ function generateDeathSaveObj() {
 function getEquipment() {
     let equip = [];
 
-    const object =  $('#other-equip input:text').filter(function() {
-        return $.trim(this.value) != "";
-    });
-
-    const array = Object.entries(object)
+    const array =  $('#other-equip input:text').toArray().map(el => el.value);
 
     array.forEach(item => {
-        let equipObj = item[1].value
-        equip.push(equipObj)
+        equip.push(item)
     })
 
     return equip
@@ -827,15 +812,10 @@ function getEquipment() {
 function getLangsAndProfs() {
     let profs = [];
 
-    const object =  $('#lang-list input:text').filter(function() {
-        return $.trim(this.value) != "";
-    });
-
-    const array = Object.entries(object)
+    const array =  $('#lang-list input:text').toArray().map(el => el.value);
 
     array.forEach(item => {
-        let profObj = item[1].value
-        profs.push(profObj)
+        profs.push(item)
     })
 
     return profs
@@ -869,15 +849,10 @@ function generateStoryObj() {
 function getFeats() {
     let feats = [];
 
-    const object =  $('#feats-list input:text').filter(function() {
-        return $.trim(this.value) != "";
-    });
-
-    const array = Object.entries(object)
+    const array =  $('#feats-list input:text').toArray().map(el => el.value);
 
     array.forEach(item => {
-        let featsObj = item[1].value
-        feats.push(featsObj)
+        feats.push(item)
     })
 
     return feats

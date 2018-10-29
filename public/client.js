@@ -67,25 +67,24 @@ const MOCK_CHARACTER = {
         "1d8 bashing"
       ]
     ],
-    "spellcasting": 0,
-    "spellClass": 0,
-    "spellAbility": 0,
-    "spellSave": 0,
-    "spellAtkBonus": 0,
-    "cantrips": ['fire'],
-    "lvl1pells": ['vortex'],
-    "lvl2Spells": [],
-    "lvl3Spells": [],
-    "lvl4": ['ball of death'],
-    "lvl5": [],
-    "lvl6": [],
-    "lvl7": [],
-    "lvl8": [],
-    "lvl9": [],
-    "hitD": 0,
+    "spells":[
+        {
+            name: "fireball",
+            lvl: 1
+        },
+        {
+            name: "Ice Shard",
+            lvl: 3
+        },
+        {
+            name: "Torchlight",
+            lvl: 0
+        }
+    ],
+    "hitD": "5d4",
     "deathSave": {
-      "successes": 0,
-      "failures": 0
+      "success": 2,
+      "fail": 1
     },
     "equip": [
       "Greatsword",
@@ -409,11 +408,19 @@ function generateProfandLang(name) {
 }
 
 function renderHitD() {
-    
+    let hit = character.hitD
+    $('#hitDice').attr('value',hit)
 }
 
 function renderDeathSave() {
-    
+    let success = character.deathSave.success
+    let fail = character.deathSave.fail
+    for (let i = 0; i < success; i++) {
+        $('.death-success').attr('checked', true)
+    }
+    for (let i = 0; i < fail; i++) {
+        $('.death-fail').attr('checked', true)
+    }
 }
 
 function renderAtks() {
@@ -426,17 +433,13 @@ function renderAtks() {
 function generateAtk(name, bonus, dmg) {
     return `
     <fieldset class= "new-atk">
-    <legend>Name</legend>
+    <legend>Weapon Name</legend>
     <input class="atk-name" type="text" value="${ name }">
     <legend>Attack Bonus</legend>
     <input class="atk-bonus" type="number" value="${ bonus }">
     <legend>Damage/Bonus</legend>
     <input class="atk-damage" type="text" value="${ dmg }">
     </fieldset>`
-}
-
-function renderSpellcasting() {
-    
 }
 
 function renderMoney() {
@@ -473,84 +476,27 @@ function generateFeats(name) {
     <input type="text" class="feats" value="${name}"></input>`
 }
 
-function renderSpellLvl1() {
-    
-}
-
-function renderSpellLvl2() {
-    
-}
-
-function renderSpellLvl3() {
-    
-}
-
-function renderSpellLvl4() {
-    
-}
-
-function renderSpellLvl5() {
-    
-}
-
-function renderSpellLvl6() {
-    
-}
-
-function renderSpellLvl7() {
-    
-}
-
-function renderSpellLvl8() {
-    
-}
-
-function renderSpellLvl9() {
-    
-}
-
-function renderSpellClass() {
-
-}
-
-function renderSpellAbility() {
-    
-}
-
-function renderSpellSave() {
-    
-}
-
-function renderSpellAtkBonus() {
-    
-}
-
-function renderCantrips() {
-    
-}
-
-function renderLvlSpells() {
-    renderSpellLvl1();
-    renderSpellLvl2();
-    renderSpellLvl3();
-    renderSpellLvl4();
-    renderSpellLvl5();
-    renderSpellLvl6();
-    renderSpellLvl7();
-    renderSpellLvl8();
-    renderSpellLvl9();
-}
-
-function renderSpellStats() {
-    renderSpellClass();
-    renderSpellAbility();
-    renderSpellSave();
-    renderSpellAtkBonus();
-}
-
 function renderSpells() {
-    renderCantrips();
-    renderLvlSpells();
+    character.spells.forEach(spell => {
+        let newSpell = generateSpell(spell.name, spell.lvl)
+        $('#atks-spells').append(newSpell);
+    })
+}
+
+function generateSpell(name, lvl) {
+    let newLvl = lvl
+    
+    if (newLvl === 0) {
+        newLvl = "cantrip"
+    }
+    
+    return `
+    <fieldset class= "new-spell">
+    <legend>Spell Name</legend>
+    <input class="spell-name" type="text" value="${ name }">
+    <legend>Spell Lvl</legend>
+    <input class="spell-lvl" type="text" value="${newLvl}">
+    </fieldset>`
 }
 
 function renderValues() {
@@ -578,12 +524,10 @@ function renderValues() {
     renderHitD();
     renderDeathSave();
     renderAtks();
-    renderSpellcasting();
     renderMoney();
     renderEquipment();
     renderStory();
     renderFeats();
-    renderSpellStats();
     renderSpells();
 }
 
@@ -714,7 +658,7 @@ function getSaveThrows() {
     let name = ['str','dex','con','int','wis','cha']
 
     name.forEach(name => {
-        saveObj[name] = checkIfChecked(name, 'save')
+        saveObj[name] = checkIfCheckedID(name, 'save')
     })
 
     return saveObj
@@ -727,13 +671,13 @@ function generateSkillsObj() {
     let name = ['acro','anim','arca','athl','dece','hist','insi','inti','inve','medi','natu','perc','perf','pers','reli','soh','stlh','surv']
 
     name.forEach(name => {
-        skillObj[name] = checkIfChecked(name, 'pro');
+        skillObj[name] = checkIfCheckedID(name, 'pro');
     })
 
     return skillObj
 }
 
-function checkIfChecked(name, id) {
+function checkIfCheckedID(name, id) {
     if ($(`#${name}-${id}`).is(':checked')) {
         return true
     }else{
@@ -757,44 +701,39 @@ function getAtks() {
     return atks
 }
 
-function getSpellcasting() {
+function getSpells() {
+    let spells = [];
 
-}
+    const name =  $('#atks-spells fieldset .spell-name ').toArray().map(el => el.value);
+    const lvl = $('#atks-spells fieldset .spell-lvl').toArray().map(el => el.value);
+    
+    for (let i= 0;i < name.length; i++) {
+        spells.push([name[i],lvl[i]])
+    }
 
-function getSpellClass() {
-
-}
-
-function getSpellAblity() {
-
-}
-
-function getSpellAblity() {
-
-}
-
-function getSpellSave() {
-
-}
-
-function getAtkBonus() {
-
-}
-
-function getCantrips() {
-
-}
-
-function getLvlSpells() {
-
+    return spells
 }
 
 function getHitD() {
-
+    return $('#hitDice').val();
 }
 
 function generateDeathSaveObj() {
+    let save = {
+        success: 0,
+        fail: 0
+    }
 
+    for (let i = 0; i < 3; i++) {
+        if($('.death-success').is(':checked')) {
+            save.success++
+        }
+        if($('.death-fail').is(':checked')){
+            save.fail++
+        }
+    }
+    console.log(save)
+    return save
 }
 
 function getEquipment() {
@@ -805,7 +744,6 @@ function getEquipment() {
     array.forEach(item => {
         equip.push(item)
     })
-
     return equip
 }
 
@@ -883,13 +821,7 @@ function generateCharacterInfoObj() {
     newCharacter.saveThrows = getSaveThrows();
     newCharacter.skills = generateSkillsObj();
     newCharacter.atks = getAtks();
-    newCharacter.spellcasting = getSpellcasting();
-    newCharacter.spellClass = getSpellClass();
-    newCharacter.spellAbility = getSpellAblity();
-    newCharacter.spellSave = getSpellSave();
-    newCharacter.spellAtkBonus = getAtkBonus();
-    newCharacter.cantrips = getCantrips();
-    newCharacter.lvlSpells = getLvlSpells();
+    newCharacter.spells = getSpells();
     newCharacter.hitD = getHitD();
     newCharacter.deathSave = generateDeathSaveObj();
     newCharacter.equip = getEquipment();

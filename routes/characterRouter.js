@@ -1,10 +1,13 @@
 const express = require("express");
+const bodyParser = require('body-parser')
+const jsonParser = bodyParser.json();
+
 const router = express.Router();
 
-const {character} = require("../models")
+const {Character} = require("../models")
 
 router.get("/", (req,res) => {
-
+    
 });
 
 router.post("/", (req,res) => {

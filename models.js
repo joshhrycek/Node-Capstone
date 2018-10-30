@@ -3,7 +3,6 @@
 const mongoose = require('mongoose');
 
 const charactersSchema = mongoose.Schema({
-    "id": Number,
     "player": {type : String, required: true},
     "name": {type : String, required: true},
     "class": {type : String, required: true},

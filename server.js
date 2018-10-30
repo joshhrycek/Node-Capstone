@@ -7,22 +7,24 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const app = express();
-const characterRouter = require('./routes/characterRouter')
-const {PORT, DATABASE_URL} = require('./config')
+const charactersRouter = require('./routes/charactersRouter');
+const {PORT, DATABASE_URL} = require('./config');
 
 app.use(express.static("public"));
-app.use(morgan("common"))
+app.use(morgan("common"));
 
-app.use('/character', characterRouter)
+app.use('/characters', charactersRouter);
 
-function runServer(databaseUrl, port = PORT) {;
+let server ;
+
+function runServer(databaseUrl, port = PORT) {
   return new Promise((resolve, reject) => {
      
     mongoose.connect(databaseUrl, err => {
        if (err) {
-         return reject(err)
-       }
-     })
+         return reject(err);
+       };
+     });
     
     server = app
       .listen(port, () => {
@@ -34,7 +36,7 @@ function runServer(databaseUrl, port = PORT) {;
         reject(err);
       });
   });
-}
+};
 
 function closeServer() {
   return mongoose.disconnect().then(() => {

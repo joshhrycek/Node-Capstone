@@ -24,7 +24,7 @@ const characterSchema = mongoose.Schema({
     "profBonus": Number,
     "passiveWis": Number,
     "AC": Number,
-    "init": Number,
+    "initi": Number,
     "speed": Number,
     "hp": Number,
     "currentHp": Number,

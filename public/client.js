@@ -22,7 +22,7 @@ const MOCK_CHARACTER = {
     "profBonus": 2,
     "passiveWis": 10,
     "AC": 16,
-    "init": 0,
+    "initi": 0,
     "speed": 25,
     "hp": 30,
     "currentHp": 20,
@@ -275,9 +275,9 @@ function renderAC() {
     $('#armor').attr('value', ac)
 }
 
-function renderInitative() {
-    let init = document.getElementById('dex-mod').value
-    $('#init').attr('value', init)
+function renderInitiative() {
+    let initi = document.getElementById('dex-mod').value
+    $('#initi').attr('value', initi)
 }
 
 function renderSpeed() {
@@ -512,7 +512,7 @@ function renderValues() {
     renderInsp();
     renderProfBonus();
     renderAC();
-    renderInitative();
+    renderInitiative();
     renderSpeed();
     renderMaxHP();
     renderCurrentHP();
@@ -631,8 +631,8 @@ function getAC() {
     return $('#armor').val();
 }
 
-function getInit() {
-    return $('#init').val();
+function getIniti() {
+    return $('#initi').val();
 }
 
 function getSpeed() {
@@ -813,7 +813,7 @@ function generateCharacterInfoObj() {
     newCharacter.profBonus = getProfBonus();
     newCharacter.passiveWis = getPassWis();
     newCharacter.AC = getAC();
-    newCharacter.init = getInit();
+    newCharacter.initi = getIniti();
     newCharacter.speed = getSpeed();
     newCharacter.hp = getHP();
     newCharacter.currentHp = getCurrentHP();

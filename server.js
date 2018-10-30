@@ -15,11 +15,6 @@ app.use(morgan("common"))
 
 app.use('/character', characterRouter)
 
-if (require.main === module) {
-  app.listen(process.env.PORT || 8080, function() {
-    console.info(`App listening on ${this.address().port}`);
-  });
-}
 function runServer(databaseUrl, port = PORT) {;
   return new Promise((resolve, reject) => {
      

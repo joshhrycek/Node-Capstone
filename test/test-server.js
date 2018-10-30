@@ -2,7 +2,7 @@
 
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const app = require("../server.js");
+const app = require('../server.js');
 
 const expect = chai.expect;
 
@@ -12,7 +12,7 @@ describe("index page", function() {
   it("should exist", function() {
     return chai
       .request(app)
-      .get("/")
+      .get("/characters")
       .then(function(res) {
         expect(res).to.have.status(200);
       });

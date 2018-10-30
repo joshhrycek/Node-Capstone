@@ -12,7 +12,7 @@ describe("index page", function() {
   it("should exist", function() {
     return chai
       .request(app)
-      .get("/character")
+      .get("/")
       .then(function(res) {
         expect(res).to.have.status(200);
       });

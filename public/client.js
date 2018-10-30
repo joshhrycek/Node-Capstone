@@ -1,7 +1,6 @@
 'use strict';
 
 const MOCK_CHARACTER = {
-    "id": 1,
     "player": "Josh",
     "name": "Jumbles The Monk",
     "class": "Monk",

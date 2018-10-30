@@ -4,11 +4,10 @@ const jsonParser = bodyParser.json();
 
 const router = express.Router();
 
-const {Character} = require("../models")
+const {Characters} = require("../models")
 
 router.get("/", (req,res) => {
-    
-    
+    res.json(Characters.get());
 });
 
 router.post("/", (req,res) => {

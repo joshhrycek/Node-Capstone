@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const characterSchema = mongoose.Schema({
+const charactersSchema = mongoose.Schema({
     "id": Number,
     "player": {type : String, required: true},
     "name": {type : String, required: true},
@@ -99,6 +99,6 @@ const characterSchema = mongoose.Schema({
     ],
 })
 
-const Character = mongoose.model('Character', characterSchema);
+const Characters = mongoose.model('Characters', charactersSchema);
 
-module.exports = {Character}
+module.exports = {Characters}

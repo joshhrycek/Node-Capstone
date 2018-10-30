@@ -8,6 +8,7 @@ const {Character} = require("../models")
 
 router.get("/", (req,res) => {
     
+    
 });
 
 router.post("/", (req,res) => {

@@ -10,14 +10,14 @@ mongoose.Promise = global.Promise;
 const {Characters} = require("../models");
 
 router.get("/", (req,res) => {
-    console.log("regardless")
     Characters
     .find()
+    console.log("")
     .then(results => {
         console.log("if .then runs")
         res.json(results);
     }).catch(err => {
-        console.log("error occur", err);
+        console.log(err)
     })
 });
 

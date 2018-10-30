@@ -9,7 +9,6 @@ let app = rawApp.app;
 
 const expect = chai.expect;
 const config = require('../config')
-
 chai.use(chaiHttp);
 
 describe("index page", function() {
@@ -28,9 +27,12 @@ describe("character endpoint", function() {
   it("should exist", function() {
     return chai
       .request(app)
-      .get("/characters")
+      .get('/characters')
       .then(function(res) {
-        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+      })
+      .catch(function(err) {
+        console.log(err)
       });
+    })
   });
-});

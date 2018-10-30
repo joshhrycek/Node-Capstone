@@ -17,10 +17,10 @@ app.use('/characters', charactersRouter);
 
 let server ;
 
-function runServer(databaseUrl, port = PORT) {
+function runServer(DATABASE_URL, port = PORT) {
   return new Promise((resolve, reject) => {
      
-    mongoose.connect(databaseUrl, err => {
+    mongoose.connect(DATABASE_URL, err => {
        if (err) {
          return reject(err);
        };

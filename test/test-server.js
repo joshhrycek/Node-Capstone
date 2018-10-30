@@ -5,7 +5,7 @@ const chaiHttp = require("chai-http");
 const mongoose = require('mongoose');
 
 const rawApp = require('../server.js');
-let app = rawApp.app;
+let { app, runServer, closeServer } = require('../server.js');
 
 const expect = chai.expect;
 const config = require('../config')
@@ -24,6 +24,15 @@ describe("index page", function() {
 
 
 describe("character endpoint", function() {
+  
+  before(function() {
+    return runServer(config.DATABASE_URL);
+  });
+
+  after(function() {
+    return closeServer();
+  });
+
   it("should exist", function() {
     return chai
       .request(app)

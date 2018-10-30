@@ -12,10 +12,8 @@ const {Characters} = require("../models");
 router.get("/", (req,res) => {
     Characters
     .find()
-    console.log("")
     .then(results => {
-        console.log("if .then runs")
-        res.json(results);
+        return res.json(results);
     }).catch(err => {
         console.log(err)
     })

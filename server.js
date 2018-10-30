@@ -3,7 +3,7 @@
 const express = require("express");
 const morgan = require("morgan");
 
-const characterRouter = require(/routes/characterRouter)
+const characterRouter = require(routes/characterRouter)
 const app = express();
 
 app.use(express.static("public"));

@@ -11,7 +11,7 @@ chai.use(chaiHttp);
 describe("index page", function() {
   it("should exist", function() {
     return chai
-      .request(app)
+      .request(app.listen())
       .get("/characters")
       .then(function(res) {
         expect(res).to.have.status(200);

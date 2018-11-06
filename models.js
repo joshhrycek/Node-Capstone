@@ -1,13 +1,14 @@
 'use strict';
 
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
 const charactersSchema = mongoose.Schema({
     "player": {type : String, required: true},
     "name": {type : String, required: true},
-    "class": {type : String, required: true},
+    "playerClass": {type : String, required: true},
     "race": {type : String, required: true},
-    "alignment": {type : String, required: true},
+    "alignment": String,
     "background": String,
     "ExpPoints": Number,
     "level": Number,
@@ -98,6 +99,31 @@ const charactersSchema = mongoose.Schema({
     ],
 })
 
-const Characters = mongoose.model('Characters', charactersSchema);
+const userSchema = mongoose.Schema({
+    username: {
+        type: String,
+        require: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
+})
 
-module.exports = {Characters}
+userSchema.methods.serialize = function() {
+    return {username: this.username}; 
+}
+
+userSchema.methods.validatePassword = function() {
+    return bcrypt.compare(password, this.password);
+}
+
+userSchema.statics.hashPassword = function(password) {
+    return bcrypt.hash(password, 10);
+}
+
+const Characters = mongoose.model('Characters', charactersSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = {Characters, User}

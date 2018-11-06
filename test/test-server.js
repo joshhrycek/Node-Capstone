@@ -31,6 +31,10 @@ before(function() {
   return runServer(config.DATABASE_URL);
 });
 
+after(function() {
+  return closeServer();
+});
+
 describe("character endpoint", function() {
   
   it("should get characters in DB", function() {
@@ -47,34 +51,31 @@ describe("character endpoint", function() {
   });
 
 describe("Post request", function () {
- 
+
   it("should respond with an error, if the post request cannot be made", function () {
     return chai
     .request(app)
     .post('/characters')
-    .send({name: "Wrong"})
+    .send({name: "Wrong",
+          class: "Rogue"})
     .then(function (res) {
       expect(res).status(400);
-      done();
-    })
-    .catch(function (err) {
-      console.log("Cannot Get Error", err)
     });
   });
 
   
-  it("should make a successful post request", function() {
-    return chai
-    .request(app)
-    .post('/characters')
-    .send(testCharacter)
-    .then(function (res) {
-      expect(res).status(201);
-    })
-    .catch(function (err) {
-      console.log(err)
-    });
-  }); 
+   it("should make a successful post request", function() {
+     return chai
+     .request(app)
+     .post('/characters')
+     .send(testCharacter)
+     .then(function (res) {
+       expect(res).status(201);
+     })
+     .catch(function (err) {
+       console.log(err)
+     });
+   }); 
 });
 
 describe("PUT endpoint", function (){
@@ -130,9 +131,4 @@ describe("Delete endpoint", function (){
       console.log("DELETE error", err);
     });
   });
-});
-
-
-after(function() {
-  return closeServer();
 });

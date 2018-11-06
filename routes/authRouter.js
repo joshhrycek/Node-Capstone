@@ -8,9 +8,6 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const router = express.Router();
 
-const {router} = require('./router');
-const {localStrategy, jwtStrategy} = require('./strategies');
-
 const createAuthToken = function(user) {
   return jwt.sign({user}, config.JWT_SECRET, {
     subject: user.username,

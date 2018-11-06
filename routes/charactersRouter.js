@@ -11,13 +11,23 @@ const {Characters} = require("../models");
 
 const validator = function (req, res, next) {
     const requiredFields = ["name", "class", "race", "player"];
+    let errorOccured = false;
     for (let i = 0; i < requiredFields.length; i++) {
         if (!(requiredFields[i] in req.body)) {
             console.log(`Missing ${requiredFields[i]} field!`)
-            return res.status(400)
-        }
-    };
-    next();
+            errorOccured = true;
+            res.status(400);
+            res.send("");
+        };
+        if (errorOccured) {
+            break
+        };
+    }
+    if (errorOccured) {
+        return
+    }
+    console.log("Calling next")
+        next();
 };
 
 

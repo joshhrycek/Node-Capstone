@@ -10,7 +10,7 @@ mongoose.Promise = global.Promise;
 const {Characters} = require("../models");
 
 const validator = function (req, res, next) {
-    const requiredFields = ["name", "class", "race", "player"];
+    const requiredFields = ["name", "playerClass", "race", "player"];
     let errorOccured = false;
     for (let i = 0; i < requiredFields.length; i++) {
         if (!(requiredFields[i] in req.body)) {
@@ -45,7 +45,7 @@ router.post("/", jsonParser, validator, (req,res) => {
     Characters
     .create({
         name: req.body.name,
-        playerClass: req.body.class,
+        playerClass: req.body.playerClass,
         race: req.body.race,
         player: req.body.player
     })
@@ -59,7 +59,7 @@ router.post("/", jsonParser, validator, (req,res) => {
 
 });
 
-router.put("/:id", jsonParser, validator, (req,res) => {
+router.put("/:id", jsonParser, (req,res) => {
     Characters
     .findById(req.params.id)
     .update({
@@ -70,9 +70,10 @@ router.put("/:id", jsonParser, validator, (req,res) => {
     })
     .then(character => {
         res.status(204).json(character).end();
+        console.log("Character Updated");
     })
     .catch(err => {
-        console.log("Character Updated", err);
+        console.log("Cannot Get Character Updated", err);
         res.status(401).end();
     })
 });

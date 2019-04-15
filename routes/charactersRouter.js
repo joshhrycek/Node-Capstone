@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const mongoose = require('mongoose');
+const {JWT_SECRET} = require('../config');
+const jwt = require('jsonwebtoken')
+const passport = require('passport')
 
 const router = express.Router();
 
@@ -30,12 +33,14 @@ const validator = function (req, res, next) {
         next();
 };
 
+router.use(passport.authenticate('jwt', { session: false}))
 
 router.get("/", (req,res) => {
     Characters
-    .find()
+    .find({username: req.user.username})
     .then(results => {
-        return res.json(results);
+        console.log(results)
+        return res.json(results.map(character => character.serialize()));
     }).catch(err => {
         console.log(err)
     })
@@ -60,22 +65,36 @@ router.post("/", jsonParser, validator, (req,res) => {
 });
 
 router.put("/:id", jsonParser, (req,res) => {
-    Characters
-    .findById(req.params.id)
-    .update({
-        name: req.body.name,
-        playerClass: req.body.class,
-        race: req.body.race,
-        player: req.body.player
-    })
-    .then(character => {
-        res.status(204).json(character).end();
-        console.log("Character Updated");
-    })
-    .catch(err => {
-        console.log("Cannot Get Character Updated", err);
-        res.status(401).end();
-    })
+    const allowFields = ["name", "playerClass", "race", "player"];
+    let allowUpdate = false;
+    for (let i = 0; i < allowFields.length; i++ ) {
+        const field = allowFields[i];
+        if (field in req.body) {
+            allowUpdate = true;
+            break;
+        }
+    }
+    if (!allowUpdate) {
+        res.status(400);
+        res.send("");
+    } else {
+        return Characters
+        .findById(req.params.id)
+        .update({
+            name: req.body.name,
+            playerClass: req.body.class,
+            race: req.body.race,
+            player: req.body.player
+        })
+        .then(character => {
+            res.status(204).json(character).end();
+            console.log("Character Updated");
+        })
+        .catch(err => {
+            console.log("Cannot Get Character Updated", err);
+            res.status(400).end();
+        })
+    };
 });
 
 router.delete("/:id", (req,res) => {

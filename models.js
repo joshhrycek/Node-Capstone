@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
 const charactersSchema = mongoose.Schema({
+    "username": String,
     "player": {type : String, required: true},
     "name": {type : String, required: true},
     "playerClass": {type : String, required: true},
@@ -115,12 +116,17 @@ userSchema.methods.serialize = function() {
     return {username: this.username}; 
 }
 
-userSchema.methods.validatePassword = function() {
+userSchema.methods.validatePassword = function(password) {
+    console.log("Validating this password", password);
     return bcrypt.compare(password, this.password);
 }
 
 userSchema.statics.hashPassword = function(password) {
     return bcrypt.hash(password, 10);
+}
+
+charactersSchema.methods.serialize = function() {
+    return {username: this.username}; 
 }
 
 const Characters = mongoose.model('Characters', charactersSchema);

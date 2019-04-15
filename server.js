@@ -31,7 +31,7 @@ passport.use(jwtStrategy);
 
 app.use('/characters', charactersRouter);
 app.use('/users', userRouter);
-app.use('/login', authRouter)
+app.use('/login', authRouter);
 
 let server ;
 

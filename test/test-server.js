@@ -4,6 +4,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const mongoose = require('mongoose');
 const faker = require('faker');
+const jwt = require('jsonwebtoken')
 
 const rawApp = require('../server.js');
 const { app, runServer, closeServer } = require('../server.js');
@@ -12,16 +13,13 @@ const { TEST_DATABASE_URL } = require('../config');
 const expect = chai.expect;
 const config = require('../config');
 chai.use(chaiHttp);
-const {Characters} = require('../models');
-
-const { testCharacter } = require('./testdata.js');
-
+const {Characters, User} = require('../models');
 
 function seedCharacterData() {
   console.info('seeding Character data');
   const seedData = [];
   for (let i=1; i<=10; i++) {
-    seedData.push(generateCharacterData());
+    seedData.push(seedData());
   }
   return Characters.insertMany(seedData); 
 }
@@ -55,6 +53,7 @@ function generateRace() {
 // or request.body data
 function generateCharacterData() {
   return {
+    user: generateUser(),
     name: generateName(),
     playerClass: generateClass(),
     race: generateRace(),
@@ -62,6 +61,18 @@ function generateCharacterData() {
   }
 }
 
+function generateUser () {
+  const userData = {
+    username: "User 1",
+    password: "password"
+  }
+  return User.insertMany(userData)
+}
+
+function seedData () {
+  generateUser();
+  generateCharacterData();
+}
 
 function tearDownDb() {
   console.warn('Deleting database');
@@ -164,23 +175,23 @@ describe("PUT endpoint", function (){
     });
   });
 
-  // it("Should respond with an error if it cannot update existing Character", function() {
-  //   const updateData = {
-  //     asdflaasdf: false
-  //   }
-  //   return Characters
-  //   .findOne()
-  //   .then(function (character) {
-  //     updateData.id = character.id;
-  //     return chai
-  //     .request(app)
-  //     .put(`/characters/${character.id}`)
-  //     .send(updateData)
-  //   })
-  //   .then(function (res) {
-  //     expect(res).status(400);
-  //   });
-  // });
+   it("Should respond with an error if it cannot update existing Character", function() {
+     const updateData = {
+       asdfasd: 5
+     }
+     return Characters
+     .findOne()
+     .then(function (character) {
+       updateData.id = character.id;
+       return chai
+       .request(app)
+       .put(`/characters/${character.id}`)
+      .send(updateData)
+     })
+     .then(function (res) {
+       expect(res).status(400);
+     });
+   });
 });
 
 describe("Delete endpoint", function (){
@@ -202,16 +213,53 @@ describe("Delete endpoint", function (){
     });
   });
 
-  // it("Should respond with an error if character cannot be deleted", function() {
-  //   return chai
-  //   .request(app)
-  //   .delete(`/characters/${id}`)
-  //   .send("")
-  //   .then(function (res) {
-  //     expect(res).status(401);
-  //   })
-  //   .catch(err => {
-  //     console.log("DELETE error", err);
-  //   });
-  // });
+  //  it("Should respond with an error if character cannot be deleted", function() {
+  //    return chai
+  //    .request(app)
+  //    .delete(`/characters/${id}`)
+  //    .send("")
+  //    .then(function (res) {
+  //      expect(res).status(401);
+  //    })
+  //    .catch(err => {
+  //      console.log("DELETE error", err);
+  //    });
+  //  });
+});
+
+describe("User Endpoint", function () {
+
+    it('should create a new user and send 201 status code', function() {
+      const newUser = {
+       username: "User 1",
+       password: "different"
+      };
+      return chai
+        .request(app)
+        .post('/users')
+        .send(newUser)
+        .then(function(res) {
+          expect(res).to.be.json;
+          expect(res).to.have.status(201);
+        });
+    });
+  
+  //  it("should allow user to login", function () {
+  //   const userData = {
+  //      username: "User 1",
+  //      password: "different"
+  //    }
+  //   return User
+  //    .create(userData)
+  //    .then(function () {
+  //      console.log("created")
+  //      return chai
+  //     .request(app)
+  //     .post('/login')
+  //      .send(userData)
+  //      .then(function (res) {
+  //        expect(res).status(200);
+  //      });
+  //    });
+  //  });
 });

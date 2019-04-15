@@ -1,135 +1,31 @@
 'use strict';
 
-const MOCK_CHARACTER = {
-    "player": "Josh",
-    "name": "Jumbles The Monk",
-    "class": "Monk",
-    "race": "Wood Elf",
-    "alignment": "Chaotic Neutral",
-    "background": "Scholor",
-    "ExpPoints": 1000,
-    "level": 1,
-    "attr": {
-        "str": 19,
-        "dex": 12,
-        "con": 15,
-        "int": 10,
-        "wis": 9,
-        "cha": 13
-      },
-    "insp": 1,
-    "profBonus": 2,
-    "passiveWis": 10,
-    "AC": 16,
-    "initi": 0,
-    "speed": 25,
-    "hp": 30,
-    "currentHp": 20,
-    "tempHp": 5,
-    "saveThrows": {
-      "str": false,
-      "dex": true,
-      "con": false,
-      "int": true,
-      "wis": false,
-      "cha": true
-    },
-    "skills": {
-      "acro": false,
-      "anim": false,
-      "arca": false,
-      "athl": false,
-      "dece": false,
-      "hist": false,
-      "insi": false,
-      "inti": false,
-      "inve": true,
-      "medi": false,
-      "natu": false,
-      "perc": true,
-      "perf": false,
-      "pers": false,
-      "reli": true,
-      "soh": false,
-      "stlh": true,
-      "surv": true
-    },
-    "atks": [
-      [
-        "Greatsword",
-        10,
-        "1d12 + 3 slashing"
-      ],
-      [
-        "Unarmed",
-        5,
-        "1d8 bashing"
-      ]
-    ],
-    "spells":[
-        {
-            name: "fireball",
-            lvl: 1
-        },
-        {
-            name: "Ice Shard",
-            lvl: 3
-        },
-        {
-            name: "Torchlight",
-            lvl: 0
-        }
-    ],
-    "hitD": "5d4",
-    "deathSave": {
-      "success": 2,
-      "fail": 1
-    },
-    "equip": [
-      "Greatsword",
-      "Club",
-      "Bag Of Holding",
-      "Javelin",
-      "Health Potion",
-      "Staff of Wanting",
-      "Map"
-    ],
-    "langsAndProfs": [
-        "Unarmed",
-        "Goblin",
-        "Simple Weapons",
-        "Common",
-        "Elven"
-    ],
-    "money":{
-        "cp": 0,
-        "sp": 0,
-        "ep": 0,
-        "gp": 0,
-        "pp": 0
-    },
-    "story": {
-        "traits": 'trait1',
-        "ideals": 'idea1',
-        "bonds": 'bond1',
-        "flaws": 'flaw1',
-    },
-    "feats": [
-      "Brave",
-      "Self-Consious",
-      "Reckless",
-    ],
-};
+const character = "";
 
-const character = MOCK_CHARACTER
+const currentUser = {
+    user: null,
+    token: null,
+}
 
+function changeCurrentUser (res) {
+    console.log(res);
+    const {authToken} = res;
+    localStorage.setItem("authToken", authToken);
+    currentUser.user = $('#signin-user').val();
+    currentUser.token = res.authToken
+    console.log("changed user", currentUser.user)
+    console.log("changed pass", currentUser.token)
+}
 
-console.log(character)
-
-
-function calculateAttrMod (stat) {
-    let mod = (stat - 10) / 2
-    return Math.floor(mod)
+function getUserCharacters() {
+    $.ajax({
+        method: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        processData: false,
+        url: '/characters',
+        headers: {'Authorization': `Bearer ${ currentUser.token }`}
+    })
 }
 
 function getCharacterSheet(callbackFn) {
@@ -146,40 +42,572 @@ function getAndDisplayCharacterSheet() {
     getCharacterSheet(displayCharacterSheet);
 }
 
+function watchHomeButton() {
+    $('header').on('click', '#home-button', event => {
+        renderMainPage();
+    });
+}
+
+function watchExampleButton() {
+    $('main').on('click', '#example-button', event => {
+        renderCharacterSheetPage();
+    });
+}
+
 function watchTestButton() {
-    $('#test-button').on('click', event => {
+    $('main').on('click','#test-button', event => {
         getAndDisplayCharacterSheet();
     });
 }
 
 function watchTestRetriveButton() {
-    $('#test-retrive').on('click', event => {
+    $('main').on('click', '#test-retrive', event => {
         generateCharacterInfoObj();
     })
 }
 
-function renderMainPage() {
+function watchSignupButton () {
+    $('header').on('click', '#enterSignup', event => {
+        event.preventDefault();
+        renderSignupPage();
+        watchSignupSubmitButton();
+    })
+}
 
+function watchSignupSubmitButton () {
+    $('main').on('click', '#signup-submit', event => {
+        console.log("clicked")
+        event.preventDefault();
+        let username = $('#signup-user').val();
+        let password = $('#signup-password').val();
+        let passwordConfirm = $('#signup-confirm');
+        let loginInfo = {
+            username: username,
+            password: password
+        }
+        if(password = passwordConfirm) {
+            console.log("confimred")
+            $.ajax({
+            method: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            processData: false,
+            url: `/users`,
+            data: JSON.stringify(loginInfo),
+            success: changeCurrentUser,
+          });
+        }else if (password !== passwordConfirm) {
+            const err = "Passwords do not match!"
+            console.log(err)
+        }
+    });
+}
+
+function watchSigninButton() {
+    $('header').on('click', '#enterSignin', event => {
+        event.preventDefault();
+        renderLoginPage();
+        watchLoginButton();
+    });
+}
+
+function watchLoginButton() {
+    $('main').on('click', '#signin-submit', event => {
+        event.preventDefault();
+        const username = $('#signin-user').val();
+        const password = $('#signin-password').val();
+        const loginInfo = { username, password };
+            $.ajax({
+            method: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            url: `/login`,
+            data: JSON.stringify(loginInfo),
+            success: changeCurrentUser,
+          });
+    });
+}
+
+function watchCharactersButton() {
+    $('main').on('click', '#saved-characters', event => {
+        event.preventDefault();
+        console.log("clicked")
+        renderSavedCharcters();
+
+    })
+}
+
+function renderMainPage() {
+    $('main').html(`<h2 id="description">Create, Update, or Store Your Dungeons and Dragons Character With Lore Ledger</h2>
+    <button id="example-button">See an Example</button>
+    <button id="saved-characters" >My Characters</button>`);
 }
 
 function renderSignupPage() {
-
+    $('main').html(`<form id="signup">
+    <fieldset id="signup-fieldset">
+        <legend>Sign Up!</legend>
+        <input type="text" id="signup-user" required>
+        <input type="text" id="signup-password" required>
+        <input type="text" id="signup-confirm" required>
+        <button type="submit" id="signup-submit">Submit</button>
+    </fieldset>
+</form>`);
 }
 
 function renderLoginPage() {
-
+    $('main').html(`<form id="signin">
+    <fieldset id="signin-fieldset">
+        <legend id="signin-legend">Sign In!</legend>
+        <input type="text" id="signin-user" required>
+        <input type="text" id="signin-password" required>
+        <button type="submit" id="signin-submit">Submit</button>
+    </fieldset>
+</form>`);
 }
 
 function renderUserCharactersPage() {
+    $('main').html(`<h2>Your Characters</h2>
+    <button id="character-create-button">Create a Character!</button>
+    <ul id="savedChar-list" >
+        <li><button class="character-button">Lash</button></li>
+    </ul>`)
+    renderSavedCharcters()
     
 }
 
 function renderSavedCharcters() {
-
+    getUserCharacters()
 }
 
 function renderCharacterSheetPage() {
+    $('main').html(`<button id="test-button">test render</button>
+    <button id="test-retrive">test retrive</button>
 
+    <form id= "character-info">
+
+            <fieldset class= "col-1">
+            <legend for="char-name">Character Name</legend>
+            <input type="text" id="char-name" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-1">
+            <legend for="class">Class</legend>
+            <input type="text" id= "class" required>
+            </fieldset>
+        
+        
+            <fieldset class= "col-1">
+            <legend for="level">Level</legend>
+            <input type="number" id= "level" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-1">
+            <legend for="race">Race</legend>
+            <input type="text" id="race" required>
+            </fieldset>
+
+
+            <fieldset class= "col-1">
+            <legend for= "background">Background</legend>
+            <input type="text" id= "background" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-1">
+            <legend for="alignment">Alignment</legend>
+            <input type="text" id="alignment" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-1">
+            <legend for="player">Player Name</legend>
+            <input type="text" id="player" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-1">
+            <legend for="exp">Experience Points</legend>
+            <input type="number" id="exp" required>
+            </fieldset>
+
+    </form>
+
+    <form id= "attributes" class="col-6">
+    <h2 id="attr-logo">Attributes</h2></br>
+            <fieldset class= "col-3">
+                <legend for= "str">Strength</legend>
+                <input type= "number" id="str" required>
+                <input type= "number" id="str-mod" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-3">
+                <legend for= "dex">Dexterity</legend>
+                <input type= "number" id="dex" required>
+                <input type= "number" id="dex-mod" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-3">
+                <legend for= "con">Constitution</legend>
+                <input type= "number" id="con" required>
+                <input type= "number" id="con-mod" required>
+            </fieldset>
+
+            <fieldset class= "col-3">
+                <legend for= "int">Intelligence</legend>
+                <input type= "number" id="int" required>
+                <input type= "number" id="int-mod" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-3">
+                <legend for= "wis">Wisdom</legend>
+                <input type= "number" id="wis" required>
+                <input type= "number" id="wis-mod" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-3">
+                <legend for= "cha">Charisma</legend>
+                <input type= "number" id="cha" required>
+                <input type= "number" id="cha-mod" required>
+            </fieldset>
+    </form>
+        
+    <form id= "misc-attr" class= "col-6">
+            <fieldset class= "col-1">
+            <legend for="insp">Inspiration</legend>
+            <input type="number" id="insp" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-1">
+            <legend for="prof-bonus">Proficiency Bonus</legend>
+            <input type="number" id="prof-bonus" required>
+            </fieldset>
+
+        
+            <fieldset class= "col-1">
+            <legend for="pass-wis">Passive Wisdom</legend>
+            <input type="number" id="pass-wis" required>
+            </fieldset>
+    </form>
+
+
+    <form id= "skills" class= "col-12">
+
+    <h2 id="skill-logo">Skills</h2></br>
+            <fieldset id="acro" class= "col-2">
+                <legend>Acrobatics</legend>
+                <input class="skill-pro" id="acro" type="checkbox">
+                <input type="number" class="skill-point" id="acro-point">
+            </fieldset>
+
+        
+            <fieldset id="anim" class= "col-2">
+                <legend>Animal Handling</legend>
+                <input class="skill-pro" id="anim-pro" type="checkbox">
+                <input type="number" class="skill-pro" id="anim-point">
+            </fieldset>
+
+        
+            <fieldset id="arca" class= "col-2">
+                <legend>Arcana</legend>
+                <input class="skill-pro" id="arca-pro" type="checkbox">
+                <input type="number" class="skill-pro" id="arca-point">
+            </fieldset>
+
+        
+            <fieldset id="athl" class= "col-2">
+                <legend>Athletics</legend>
+                <input class="skill-pro" id="athl-pro" type="checkbox">
+                <input type="number" class="skill-pro" id="athl-point">
+            </fieldset>
+
+        
+            <fieldset id="dece" class= "col-2">
+                <legend>Deception</legend>
+                <input class="skill-pro" id="dece-pro" type="checkbox">
+                <input type="number" id="dece-point">
+            </fieldset>
+
+        
+            <fieldset id="hist" class= "col-2">
+                <legend>History</legend>
+                <input class="skill-pro" id="hist-pro" type="checkbox">
+                <input type="number" id="hist-point">
+            </fieldset>
+
+        
+            <fieldset id="insi" class= "col-2">
+                <legend>Insight</legend>
+                <input class="skill-pro" id="insi-pro" type="checkbox">
+                <input type="number" id="insi-point">
+            </fieldset>
+
+        
+            <fieldset id="inti" class= "col-2">
+                <legend>Intimidation</legend>
+                <input class="skill-pro" id="inti-pro" type="checkbox">
+                <input type="number" id="inti-point">
+            </fieldset>
+
+        
+            <fieldset id="inve" class= "col-2">
+                <legend>Investigation</legend>
+                <input class="skill-pro" id="inve-pro" type="checkbox">
+                <input type="number" id="inve-point">
+            </fieldset>
+
+            <fieldset id="medi" class= "col-2">
+                <legend>Medicine</legend>
+                <input class="skill-pro" id="medi-pro" type="checkbox">
+                <input type="number" id="medi-point">
+            </fieldset>
+
+        
+            <fieldset id="natu" class= "col-2">
+                <legend>Nature</legend>
+                <input class="skill-pro" id="natu-pro" type="checkbox">
+                <input type="number" id="natu-point">
+            </fieldset>
+
+            <fieldset id="perc" class= "col-2">
+                <legend>Perception</legend>
+                <input class="skill-pro" id="perc-pro" type="checkbox">
+                <input type="number" id="perc-point">
+            </fieldset>
+
+            <fieldset id="perf" class= "col-2">
+                <legend>Performance</legend>
+                <input class="skill-pro" id="perf-pro" type="checkbox">
+                <input type="number" id="perf-point">
+            </fieldset>
+
+            <fieldset id="pers" class= "col-2">
+                <legend>Persuasion</legend>
+                <input class="skill-pro" id="pres-pro" type="checkbox">
+                <input type="number" id="pers-point">
+            </fieldset>
+
+            <fieldset id="reli" class= "col-2">
+                <legend>Religion</legend>
+                <input class="skill-pro" id="reli-pro" type="checkbox">
+                <input type="number" id="reli-point">
+            </fieldset>
+
+            <fieldset id="soh" class= "col-2">
+                <legend>Sleight of Hand</legend>
+                <input class="skill-pro" id="soh-pro" type="checkbox">
+                <input type="number" id="soh-point">
+            </fieldset>
+
+        
+            <fieldset id="stlh" class= "col-2">
+                <legend>Stealth</legend>
+                <input class="skill-pro" id="stlh-pro" type="checkbox">
+                <input type="number" id="stlh-point">
+            </fieldset>
+
+        
+            <fieldset id="surv" class= "col-2">
+                <legend>Survival</legend>
+                <input class="skill-pro" id="surv-pro" type="checkbox">
+                <input type="number" id="surv-point">
+            </fieldset>
+
+    </form>
+
+    <form id= "saves" class= "col-6">
+
+    <h2 id="save-logo">Saving Throws</h2></br>
+            <fieldset>
+                <legend>Strength</legend>
+                <input type="checkbox" class="save-prof" id="str-save">
+                <input id="str-save-point" type="number">
+            </fieldset>
+
+        
+            <fieldset>
+                <legend>Dexterity</legend>
+                <input type="checkbox" class="save-prof" id="dex-save">
+                <input id="dex-save-point" type="number">
+            </fieldset>
+
+        
+            <fieldset>
+                <legend>Constitution</legend>
+                <input type="checkbox" class="save-prof" id="con-save">
+                <input id="con-save-point" type="number">
+            </fieldset>
+
+        
+            <fieldset>
+                <legend>Intelligence</legend>
+                <input type="checkbox" class="save-prof" id="int-save">
+                <input id="int-save-point" type="number">
+            </fieldset>
+
+        
+            <fieldset>
+                <legend>Wisdom</legend>
+                <input type="checkbox" class="save-prof" id="wis-save">
+                <input id="wis-save-point" type="number">
+            </fieldset>
+
+        
+            <fieldset>
+                <legend>Charisma</legend>
+                <input type="checkbox" class="save-prof" id="cha-save">
+                <input id="cha-save-point" type="number">
+            </fieldset>
+
+            <fieldset>
+                <legend>Death Saves</legend>
+                <label>Success
+                    <input type="checkbox" class="death-success">
+                    <input type="checkbox" class="death-success">
+                    <input type="checkbox" class="death-success">
+                </label>
+                <label>Failure
+                    <input type="checkbox" class="death-fail">
+                    <input type="checkbox" class="death-fail">
+                    <input type="checkbox" class="death-fail">
+                </label>
+            </fieldset>
+
+    </form>
+
+    <form id= "combat-stats" class= "col-6">
+
+    <h2 id="combat-logo">Combat</h2></br>
+            <fieldset class= "col-3">
+                <legend>Armor Class</legend>
+                <input  id="armor" type="number">
+            </fieldset>
+
+        
+            <fieldset class= "col-3">
+                <legend>Initiative</legend>
+                <input  id="initi" type="number">
+            </fieldset>
+
+        
+            <fieldset class= "col-3">
+                <legend>Speed</legend>
+                <input id="speed" type="number">
+            </fieldset>
+
+        
+            <fieldset>
+                <legend>Hit Point Maximum</legend>
+                <input id="maxHP" type="number">
+                <legend>Current Hit Points</legend>
+                <input id= "currentHP" type="number">
+                <legend>Temporary Hit Points</legend>
+                <input id="tempHP" type="number">
+            </fieldset>
+
+            <fieldset>
+                <legend>Hit Dice</legend>
+                <input type="text" id="hitDice">
+            </fieldset>
+
+            <form id="atks-spells">
+        
+            <fieldset class= "new-atk">
+    
+            <legend>Name</legend>
+            <input id="new-atk-name" type="text">
+            
+            <legend>Attack Bonus</legend>
+            <input id="new-atk-bonus" type="number">
+            
+            <legend>Damage/Type</legend>
+            <input id="new-atk-dmg" type="text">
+    
+            </fieldset>
+    
+            <button id="new-atk-button" type="submit">Add Attack</button>
+        </form>
+
+    </form>
+
+    <form id="background-form" class= "col-6">
+
+    <h2 id="story-logo">Story</h2></br>
+            <fieldset id="traits-form">
+                <legend>Personality Traits</legend>
+                <input id="traits" type="text">
+            </fieldset>
+
+        
+            <fieldset id="ideals-form">
+                <legend>Ideals</legend>
+                <input id="ideals" type="text">
+            </fieldset>
+
+        
+            <fieldset id="bonds-form">
+                <legend>Bonds</legend>
+                <input id="bonds" type="text">
+            </fieldset>
+
+        
+            <fieldset id="flaws-form">
+                <legend>Flaws</legend>
+                <input id="flaws" type="text">
+            </fieldset>
+
+    </form>
+
+    <form id="equipment" class= "col-6">
+
+    <h2 id="equip-logo">Equipment</h2></br>
+            <fieldset id="money">
+                <legend>CP</legend>
+                <input id="cp" type="number">
+                <legend>SP</legend>
+                <input id="sp" type="number">
+                <legend>EP</legend>
+                <input id="ep" type="number">
+                <legend>GP</legend>
+                <input id="gp" type="number">
+                <legend>PP</legend>
+                <input id="pp" type="number">
+            </fieldset>
+
+        
+            <fieldset id="other-equip">
+                <legend>Equipment</legend>
+                <input id="equip" class="equip-class" type="text">
+                <button id="equip-button">Add Equipment</button>
+            </fieldset>
+
+    </form>
+
+    <form id="features" class= "col-6">
+    <h2 id="feats-logo">Features and Traits</h2></br>
+            <fieldset id="feats-list">
+            <legend>Features and Traits</legend>
+            <input type="text" id="new-feat" class="feats">
+            <button id="add-feat-button" type="submit">Add Feature</button>
+            </fieldset>
+    </form>
+
+    <form id="lang-other" class= "col-6">
+    <h2 id="lang-logo">Languages and Other Profiences</h2></br>
+            <fieldset id="lang-list">
+                <legend>Languages and Other Proficiencies</legend>
+                <input type="text" id="new-lang" class="lang">
+                <button id="add-lang-button" type="submit">Add Proficiency</button>
+            </fieldset>
+    </form>
+`)
 }
 
 
@@ -554,6 +982,11 @@ function watchProfButton () {
     });
 }
 
+function calculateAttrMod (stat) {
+    let mod = (stat - 10) / 2
+    return Math.floor(mod)
+}
+
 function rollDice() {
     let results = [];
     for (let i = 0; i < 6; i++) {
@@ -799,6 +1232,7 @@ function getFeats() {
 function generateCharacterInfoObj() {
     let newCharacter = {};
 
+    newCharacter.username = currentUser.user;
     newCharacter.player = getPlayer();
     newCharacter.name = getName();
     newCharacter.class = getClass();
@@ -833,16 +1267,22 @@ function generateCharacterInfoObj() {
 }
 
 function watchButtons() {
+    watchHomeButton();
     watchAttackButton();
     watchEquipButton();
     watchFeatButton();
     watchProfButton();
     watchTestButton();
     watchTestRetriveButton();
+    watchExampleButton();
+    watchSignupButton();
+    watchSigninButton();
+    watchAttackButton();
+    watchCharactersButton();
+
 }
 
 function startApp() {
-    renderMainPage();
     watchButtons();
     rollDice();
 }

@@ -14,6 +14,7 @@ mongoose.Promise = global.Promise;
 const {User} = require('../models');
 
 router.post ('/', jsonParser, (req, res) => {
+    console.log("creating user")
     const requiredFields = ['username', 'password'];
     const missingField = requiredFields.find(field => {
         !(field in req.body)
@@ -81,6 +82,7 @@ router.post ('/', jsonParser, (req, res) => {
     .find({username})
     .count()
     .then(count => {
+        console.log("counting")
         if (count > 0) {
             return Promise.reject({
                 code: 422,
@@ -88,23 +90,25 @@ router.post ('/', jsonParser, (req, res) => {
                 location: "username"
             });
         }
+        console.log(password)
     return User.hashPassword(password)
     })
     .then(hash => {
+        console.log("creating")
         return User.create({
             username,
             password: hash,
-            firstName,
-            lastName
         });
     })
     .then(user => {
+        console.log("User Created")
         return res.status(201).json(user.serialize());
     })
     .catch(err => {
         if (err.reason === "Username Taken") {
             return res.status(err.code).json(err);
         }
+        console.log("Code 500")
         res.status(500).json({
             code: 500,
             message: "Internal Server Error"
